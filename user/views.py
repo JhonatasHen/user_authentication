@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.http.response import HttpResponse
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
-
+from django.contrib.auth import authenticate
+from django.contrib.auth import login as login_django
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 
@@ -34,11 +35,12 @@ def login(request):
         user = authenticate(username=username, password=senha)
 
         if user:
-            login(request, user)
-            return HttpResponse('Autenticado')
+            login_django(request, user)
+            return render(request,'plataforma.html' )
         
         else:
             return HttpResponse('Usuário ou senha inválido')
 
+@login_required(login_url="/auth/login/")
 def plataforma(request):
-    ...
+    return HttpResponse('Olá')
